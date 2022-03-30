@@ -72,6 +72,7 @@ def type_to_class(class_str):
     from pmutt.mixture.cov import PiecewiseCovEffect
     from pmutt.chemkin import CatSite
     from pmutt.omkm.reaction import SurfaceReaction, GasReaction
+    from pmutt.omkm.phase import IdealGas
 
     type_to_class_dict = {
         "<class 'pmutt.eos.IdealGasEOS'>": IdealGasEOS,
@@ -102,6 +103,7 @@ def type_to_class(class_str):
         "<class 'pmutt.chemkin.CatSite'>": CatSite,
         "<class 'pmutt.omkm.reaction.SurfaceReaction'>": SurfaceReaction,
         "<class 'pmutt.omkm.reaction.GasReaction'>": GasReaction,
+        "<class 'pmutt.omkm.phase.IdealGas'>": IdealGas,
     }
     return type_to_class_dict[class_str]
 
