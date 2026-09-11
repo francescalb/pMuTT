@@ -1,5 +1,5 @@
 from pathlib import Path
-from collections import namedtuple, defaultdict
+from collections import defaultdict
 
 import yaml
 
@@ -13,6 +13,7 @@ from pmutt.omkm.phase import InteractingInterface
 from pmutt.omkm import phase as omkm_phases
 from pmutt.omkm.units import Units
 
+
 def write_cti(phases=None,
               species=None,
               reactions=None,
@@ -25,9 +26,9 @@ def write_cti(phases=None,
               use_motz_wise=False,
               ads_act_method='get_H_act',
               write_xml=True):
-    """Writes the units, phases, species, lateral interactions, reactions and 
+    """Writes the units, phases, species, lateral interactions, reactions and
     additional options in the CTI format for OpenMKM
-    
+
     Parameters
     ----------
         phases : list of :class:`~pmutt.omkm.phase.Phase` objects
@@ -85,7 +86,7 @@ def write_cti(phases=None,
         if lateral_interactions is not None:
             for lat_interaction in lateral_interactions:
                 if lat_interaction.name is None:
-                    lat_interaction.name = '{:04d}'.format(i)
+                    lat_interaction.name = 'i_{:04d}'.format(i)
                     i += 1
 
                 lat_inter_CTI = _force_pass_arguments(lat_interaction.to_cti,
@@ -99,7 +100,7 @@ def write_cti(phases=None,
         for reaction in reactions:
             # Assign reaction ID if not present
             if reaction.id is None:
-                reaction.id = '{:04d}'.format(i)
+                reaction.id = 'r_{:04d}'.format(i)
                 i += 1
             # Write reaction
             reaction_CTI = _force_pass_arguments(reaction.to_cti, units=units,
@@ -170,15 +171,17 @@ def write_cti(phases=None,
         # Or return as string
         return lines_out
 
+
 def write_thermo_yaml(phases=None, species=None, reactions=None,
                       lateral_interactions=None, units=None,
                       filename=None, T=300., P=1., newline='\n',
                       ads_act_method='get_H_act',
+                      use_motz_wise='False',
                       yaml_options={'default_flow_style': None, 'indent': 2,
                                     'sort_keys': False, 'width': 79}):
-    """Writes the units, phases, species, lateral interactions, reactions and 
+    """Writes the units, phases, species, lateral interactions, reactions and
     additional options in the CTI format for OpenMKM
-    
+
     Parameters
     ----------
         phases : list of :class:`~pmutt.omkm.phase.Phase` objects
@@ -203,7 +206,7 @@ def write_thermo_yaml(phases=None, species=None, reactions=None,
         newline : str, optional
             Type of newline to use. Default is Linux newline ('\\n')
         ads_act_method : str, optional
-            Activation method to use for adsorption reactions. Accepted 
+            Activation method to use for adsorption reactions. Accepted
             options include 'get_H_act' and 'get_G_act'. Default is
             'get_H_act'.
     Returns
@@ -246,6 +249,7 @@ def write_thermo_yaml(phases=None, species=None, reactions=None,
             if reaction.id is None:
                 reaction.id = 'r_{:04d}'.format(i)
                 i += 1
+            reaction.use_motz_wise = use_motz_wise
             # Write reaction
             reaction_dict = reaction.to_omkm_yaml(units=units, T=T)
             reactions_out.append(reaction_dict)
@@ -287,6 +291,7 @@ def write_thermo_yaml(phases=None, species=None, reactions=None,
                 i += 1
             bep_dict = _force_pass_arguments(bep.to_omkm_yaml, units=units)
             beps_out.append(bep_dict)
+
         # yaml_dict['beps'] = beps_out
 
     '''Organize fields'''
@@ -308,7 +313,6 @@ def write_thermo_yaml(phases=None, species=None, reactions=None,
                  '# {}'.format(field.upper()),
                  '#' + '-' * 79,
                  yaml_str])
-
             # yaml_dict[field] = val
 
     # Convert to YAML format
@@ -331,7 +335,8 @@ def write_thermo_yaml(phases=None, species=None, reactions=None,
         return lines_out
 
 def write_yaml(reactor_type=None,
-               mode=None,
+               temperature_mode=None,
+               pressure_mode=None,
                nodes=None,
                V=None,
                T=None,
@@ -383,13 +388,20 @@ def write_yaml(reactor_type=None,
             - batch
 
             Value written to ``reactor.type``.
-        mode : str
+        temperature_mode : str
             Operation of reactor. Supported options include:
 
             - Isothermal
             - Adiabatic
 
-            Value written to ``reactor.mode``.
+            Value written to ``reactor.temperature_mode``.
+        pressure_mode : str
+            Operation of reactor. Supported options include:
+
+            - Isobaric
+            - Isochoric
+
+            Value written to ``reactor.pressure_mode``.
         nodes : int
             Number of nodes to use if ``reactor_type`` is 'pfr_0d'. Value
             written to ``reactor.nodes``
@@ -553,7 +565,8 @@ def write_yaml(reactor_type=None,
         reactor = {}
     reactor_params = [
         _Param('type', reactor_type, None),
-        _Param('mode', mode, None),
+        _Param('temperature_mode', temperature_mode, None),
+        _Param('pressure_mode', pressure_mode, None),
         _Param('nodes', nodes, None),
         _Param('volume', V, '_length3'),
         _Param('area', A, '_length2'),

@@ -98,7 +98,7 @@ class StoichSolid(phase_cantera.StoichSolid):
             'name': self.name,
             'elements': list(self.elements),
             'species': species_names,
-            'thermo': 'fixed-stoichiometry'
+            'thermo': 'ref-state-fixed-stoichiometry'
         }
         return yaml_dict
 
@@ -114,7 +114,7 @@ class InteractingInterface(phase_cantera.Phase):
         species : list of :class:`~pmutt._ModelBase` objects
             Species present in Phase
         site_density : float, optional
-            Site density in g/cm2. Default is None
+            Site density in mol/cm2. Default is None
         phases : list of :class:`~pmutt.cantera.phase.Phase` objects or str
             Phases associated with this interface
         interactions : str, optional
@@ -330,7 +330,7 @@ class InteractingInterface(phase_cantera.Phase):
 
         '''Assign thermo depending on presence of lateral interactions'''
         if self.interactions is None or len(self.interactions) == 0:
-            yaml_dict['thermo'] = 'ideal-surface'
+            yaml_dict['thermo'] = 'surface-lateral-interaction'
             yaml_dict['interactions'] = 'none'
         else:
             yaml_dict['thermo'] = 'surface-lateral-interaction'

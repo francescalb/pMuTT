@@ -1,7 +1,6 @@
 import unittest
 import numpy as np
 from ase.build import molecule
-from pmutt import constants as c
 from pmutt.statmech import StatMech, presets
 from pmutt.empirical.nasa import Nasa9, SingleNasa9
 
@@ -64,6 +63,32 @@ class TestNasa(unittest.TestCase):
                                                T_low=100.,
                                                T_high=5000.,
                                                model=H2O_statmech)
+
+    def test_get_GoRT_Selements(self):
+        T = np.array([
+            500., 600., 700., 800., 900., 1000., 1100., 1200., 1300., 1400.,
+            1500., 1600., 1700., 1800., 1900., 2000., 2100., 2200
+        ])
+        HoRT_expected = np.array([
+            -312.8864984, -260.02368702, -222.24560239, -193.89448982,
+            -171.82759584, -154.15958325, -139.69092339, -127.62210266,
+            -117.39973902, -108.62865137, -101.01910275, -94.35382838,
+            -88.46670135, -83.22851013, -78.53722772, -74.31120008,
+            -70.48428094, -67.00230448
+        ])
+        SoR_Selements_expected = np.array([
+            -3.21032649, -2.42845119, -1.746929, -1.13779778, -0.58349529,
+            -0.07236386, 0.40366771, 0.85037837, 1.27202368, 1.67181601,
+            2.05223696, 2.41524774, 2.7624351, 3.09511512, 3.41440855,
+            3.7212968, 4.01666398, 4.30131811
+        ])
+        GoRT_expected = HoRT_expected - SoR_Selements_expected
+        np.testing.assert_almost_equal(self.Nasa9_statmech.
+                                       get_GoRT(T=T[0], S_elements=True),
+                                       GoRT_expected[0])
+        np.testing.assert_array_almost_equal(self.Nasa9_statmech.
+                                             get_GoRT(T=T, S_elements=True),
+                                             GoRT_expected)
 
 
 if __name__ == '__main__':

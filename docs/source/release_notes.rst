@@ -7,6 +7,125 @@ Development Branch
 ------------------
 `Development Branch`_
 
+Version 1.4.17
+--------------
+
+May 25, 2025
+
+- Added feature where you can specify 'pymatgen' as the symmetry number for
+  a gas molecule and Pymatgen will determine the symmetry number
+  
+- Added a check that forces temperatures submitted for thermodynamic
+  calculations to be astype=float to avoid calculation issues encountered
+  when temperatures are entered as astype=int.
+
+Version 1.4.15
+--------------
+
+April 21, 2024
+
+- Fixed reaction lists in BEP section of thermo.yaml openMKM file
+  so reactions are all listed individually and no longer grouped.
+
+Version 1.4.14
+--------------
+
+February 8, 2024
+
+- Fix equilibrium unittest warning messages
+
+Version 1.4.13
+--------------
+
+February 4, 2024
+
+- Fix equilibrium class-Upper bound solver violation
+
+Version 1.4.11
+--------------
+
+February 3, 2024
+
+- Fix unittest for equilibrium class-Missing thermdat file
+- Fix equilibrium class-Lower bound solver violation
+
+Version 1.4.10
+--------------
+
+February 2, 2024
+
+- Improved NASA9 polynomial fit function
+- Overall clean-up of NASA9 deprecated code
+
+Version 1.4.9
+-------------
+
+October 25, 2023
+
+- Fixed deprecated numpy function impacting nasa.py and shomate.py
+  Conversion of an array with ndim > 0 to a scalar
+
+Version 1.4.7
+-------------
+
+August 23, 2023
+
+- Fixed improper reaction and lateral interaction ID's in write_CTI
+
+Version 1.4.6
+-------------
+
+August 15, 2023
+
+- Adding missing dependency for openpyxl
+
+Version 1.4.5
+-------------
+
+June 23, 2023
+
+- Updated .iteritems dpecricated function in Pandas
+- Cleanup unused imports
+
+Version 1.4.4
+-------------
+
+May 1, 2023
+
+- CRITICAL UPDATE: Fixed Nasa polynomial fit issue for enthalpy and entropy when T_ref > T_mid
+
+Version 1.4.3
+-------------
+
+Mar. 19, 2023
+
+- Updated PIP installation dependency requirements
+
+Version 1.4.2
+-------------
+
+Mar. 18, 2023
+
+- Added new :class:`~pmutt.equilibrium.Equilibrium` class that computes the equilibrium
+  concentration on a network of species by minimizing the network
+  Gibbs free energy while maintaining the total atom balance of
+  the initial starting concentration of species
+- Major GitHub documentation update including the new functionality
+  from v1.3.2 and v1.4.0, corrections noted in the issues database,
+  fixes to broken links, addition of a new "Helper Functions. section,
+  and misc upgrades.
+
+Version 1.3.2
+-------------
+
+Jan. 26, 2023
+
+- Added ``S_elements`` parameter to entropy and Gibbs free energy
+  methods allowing you to compute an entropy and Gibbs free energy
+  of formation for a single species by including the entropy of the
+  elements in the species.
+- Misc bug fixes
+
 Version 1.2.21
 --------------
 
